@@ -3,7 +3,7 @@ git add .
 
 git commit -m "업데이트 내용 작성"
 
-git push origin main
+git push origin main(기본위치, 아니면 master)
 
 
 추적을 하지 않는 경우
