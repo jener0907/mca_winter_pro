@@ -1,19 +1,7 @@
 # source /home/pi/Desktop/jener/winter_project/qr_pro1/bin/activate
-
+# deactivate
+# /bin/python /home/pi/Desktop/jener/winter_project/main.py
 # https://github.com/jener0907/mca_winter_pro
-
-pi@raspberrypi:~/Desktop/jener/winter_project $ git init
-힌트: Using 'master' as the name for the initial branch. This default branch name
-힌트: is subject to change. To configure the initial branch name to use in all
-힌트: of your new repositories, which will suppress this warning, call:
-힌트: 
-힌트: 	git config --global init.defaultBranch <name>
-힌트: 
-힌트: Names commonly chosen instead of 'master' are 'main', 'trunk' and
-힌트: 'development'. The just-created branch can be renamed via this command:
-힌트: 
-힌트: 	git branch -m <name>
-
 
 import time
 import cv2
