@@ -2,6 +2,9 @@
 # deactivate
 # /bin/python /home/pi/Desktop/jener/winter_project/main.py
 # https://github.com/jener0907/mca_winter_pro
+# https://github.com/jener0907/mca_winter_pro/tree/main/Raspberry%20pi_code
+pi@raspberrypi:~/Desktop/jener/winter_project $ git push origin --force main
+fatal: repository 'https://github.com/jener0907/mca_winter_pro/tree/main/Raspberry%20pi_code/' not found
 
 import time
 import cv2
