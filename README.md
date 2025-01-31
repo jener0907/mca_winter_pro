@@ -1,4 +1,4 @@
-# GITHUB 동기화
+# github 동기화
 git add .
 
 git commit -m "업데이트 내용 작성"
