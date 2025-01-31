@@ -6,19 +6,21 @@ git commit -m "업데이트 내용 작성"
 git push origin main(기본위치, 아니면 master)
 
 
-추적을 하지 않는 경우
-- touch .gitignore 로 프로젝트 경로에 파일 생성
-- .gitignore에 제외할 파일, 폴더를 추가(main/ *.pyc 형식)
+동기화를 하지 않는 경우(용량이 큰 경우 등)
+1. touch .gitignore 로 프로젝트 경로에 .gitignore 파일 생성
+2. .gitignore에 제외할 파일, 폴더를 추가(main/ *.pyc 형식)
 
-이미 푸쉬되어 삭제해야 하는 경우
-- git rm -r --cached 폴더이름 폴더이름 형식
-- 강제로 날리는 경우 --cached 앞에 -f를 붙인다.
+이미 동기화되어 삭제해야 하는 경우(github와 연결 전)
+1. git rm -r --cached "폴더이름 폴더이름" 형식
+2. 강제로 날리는 경우 git rm -r --cached -f "폴더이름 폴더이름"
 
 GIT 폴더를 변경하는 경우
-- 저장소를 확인 git remote -v
-- 새로운 저장소로 변경 git remote set-url origin "저장소 주소"
-- 변경 확인 git remote -v
-- 변경 내용 푸시 git push -u origin main
+1. 저장소를 확인 git remote -v
+2. 새로운 저장소로 변경 git remote set-url origin "저장소 주소"
+3. 변경 확인 git remote -v
+4. 변경 내용 푸시 git push -u origin main
+
+- 강제로 푸시하는 경우 git push --force origin main (기존 저장소 날아감)
 
 # 라이브러리 설치
 requirements.txt 참고
