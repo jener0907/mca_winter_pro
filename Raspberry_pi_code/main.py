@@ -4,6 +4,7 @@
 # https://github.com/jener0907/mca_winter_pro
 # https://github.com/jener0907/mca_winter_pro/tree/main/Raspberry%20pi_code
 
+
 import time
 import cv2
 import numpy as np
@@ -31,7 +32,16 @@ class MainApp:
             "Player_Number_009": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/009_eliminated.mp3",
             "Player_Number_010": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/010_eliminated.mp3",
             "Player_Number_456": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/456_eliminated.mp3",
-
+            
+            # 게임 사운드 추가
+            "Way_Back_then": "/home/pi/Desktop/jener/winter_project/game_sounds/Way_Back_then.mp3",
+            "game_start": "/home/pi/Desktop/jener/winter_project/game_sounds/game_start.mp3",
+    
+            # `selected_command` 관련 추가
+            "A": "/home/pi/Desktop/jener/winter_project/game_sounds/A.mp3",
+            "B": "/home/pi/Desktop/jener/winter_project/game_sounds/B.mp3",
+            "C": "/home/pi/Desktop/jener/winter_project/game_sounds/C.mp3",
+        
         })
         
         # 🔵 블루투스 자동 연결
@@ -65,13 +75,25 @@ class MainApp:
 
                 # ⏳ **2초 대기 후 해당 음성 파일 재생**
                 time.sleep(2)
-                selected_command = self.value_generator.generate()
-                self.audio_player.play_audio(f"/home/pi/Desktop/jener/winter_project/game_sounds/{selected_command}.mp3")
+                selected_command = self.value_generator.generate().strip().upper()  # 🔄 공백 제거 및 대문자 변환
+
+                # 🔍 `selected_command` 확인
+                print(f"🔍 Selected command: {selected_command}")  
+                print(f"📜 Registered audio files keys: {list(self.audio_player.audio_files.keys())}")
+
+                # 🎵 오디오 재생
+                if selected_command in self.audio_player.audio_files:
+                    self.audio_player.play_audio(selected_command)  # ✅ `play_audio()`는 키 값만 전달
+                else:
+                    print(f"⚠️ Warning: No audio file mapped for command '{selected_command}'")
+
 
                 # 🔊 **게임 시작 알림 + 배경 음악**
-                self.audio_player.play_audio("/home/pi/Desktop/jener/winter_project/game_sounds/game_start.mp3")
+                self.audio_player.play_audio("game_start")  # ✅ 키 값 전달
                 time.sleep(2)
-                self.audio_player.play_audio("/home/pi/Desktop/jener/winter_project/game_sounds/Way_Back_then.mp3")
+                self.audio_player.play_audio("Way_Back_then")  # ✅ 키 값 전달
+
+
 
                 # 🎥 **QR 코드 인식 시작 (20초)**
                 self.data_manager.clear_data()
