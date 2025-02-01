@@ -1,26 +1,53 @@
-# github 동기화
+# 2/1 patch
+bluetooth auto connect
+
+1. nano ~/bt_auto_connet.sh
+
+2. 주소 좌표 지정
+ESP32_MAC="XX:XX:XX:XX:XX:XX"
+
+echo " 블루투스 자동 연결 시작..."
+
+# 블루투스 서비스 활성화
+bluetoothctl power on
+bluetoothctl agent on
+bluetoothctl default-agent
+
+# ESP32 블루투스 자동 페어링 및 연결
+bluetoothctl connect $ESP32_MAC
+bluetoothctl trust $ESP32_MAC
+
+# RFCOMM 포트 연결
+sudo rfcomm bind /dev/rfcomm0 $ESP32_MAC
+echo " /dev/rfcomm0 블루투스 연결 완료!"
+
+exit 0
+
+3. 실행권한 부여
+chmod +x ~/bt_auto_connect.sh
+
+
+# GITHUB 동기화
 git add .
 
 git commit -m "업데이트 내용 작성"
 
-git push origin main(기본위치, 아니면 master)
+git push origin main
 
 
-# 동기화를 하지 않는 경우(용량이 큰 경우 등)
-1. touch .gitignore 로 프로젝트 경로에 .gitignore 파일 생성
-2. .gitignore에 제외할 파일, 폴더를 추가(main/ *.pyc 형식)
+추적을 하지 않는 경우
+- touch .gitignore 로 프로젝트 경로에 파일 생성
+- .gitignore에 제외할 파일, 폴더를 추가(main/ *.pyc 형식)
 
-# 이미 동기화되어 삭제해야 하는 경우(github와 연결 전)
-1. git rm -r --cached "폴더이름 폴더이름" 형식
-2. 강제로 날리는 경우 git rm -r --cached -f "폴더이름 폴더이름"
+이미 푸쉬되어 삭제해야 하는 경우
+- git rm -r --cached 폴더이름 폴더이름 형식
+- 강제로 날리는 경우 --cached 앞에 -f를 붙인다.
 
-# GIT 폴더를 변경하는 경우
-1. 저장소를 확인 git remote -v
-2. 새로운 저장소로 변경 git remote set-url origin "저장소 주소"
-3. 변경 확인 git remote -v
-4. 변경 내용 푸시 git push -u origin main
-
-- 강제로 푸시하는 경우 git push --force origin main (기존 저장소 날아감)
+GIT 폴더를 변경하는 경우
+- 저장소를 확인 git remote -v
+- 새로운 저장소로 변경 git remote set-url origin "저장소 주소"
+- 변경 확인 git remote -v
+- 변경 내용 푸시 git push -u origin main
 
 # 라이브러리 설치
 requirements.txt 참고

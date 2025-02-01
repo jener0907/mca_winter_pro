@@ -3,17 +3,6 @@
 # /bin/python /home/pi/Desktop/jener/winter_project/main.py
 # https://github.com/jener0907/mca_winter_pro
 # https://github.com/jener0907/mca_winter_pro/tree/main/Raspberry%20pi_code
-pi@raspberrypi:~/Desktop/jener/winter_project $ git push origin main 
-To https://github.com/jener0907/mca_winter_pro
- ! [rejected]        main -> main (fetch first)
-error: 레퍼런스를 'https://github.com/jener0907/mca_winter_pro'에 푸시하는데 실패했습니다
-힌트: 리모트에 로컬에 없는 사항이 들어 있으므로 업데이트가
-힌트: 거부되었습니다. 이 상황은 보통 또 다른 저장소에서 같은
-힌트: 저장소로 푸시할 때 발생합니다.  푸시하기 전에
-힌트: ('git pull ...' 등 명령으로) 리모트 변경 사항을 먼저
-힌트: 포함해야 합니다.
-힌트: 자세한 정보는 'git push --help'의 "Note about fast-forwards' 부분을
-힌트: 참고하십시오.
 
 import time
 import cv2
@@ -35,6 +24,14 @@ class MainApp:
             "Player_Number_002": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/002_eliminated.mp3",
             "Player_Number_003": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/003_eliminated.mp3",
             "Player_Number_004": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/004_eliminated.mp3",
+            "Player_Number_005": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/005_eliminated.mp3",
+            "Player_Number_006": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/006_eliminated.mp3",
+            "Player_Number_007": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/007_eliminated.mp3",
+            "Player_Number_008": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/008_eliminated.mp3",
+            "Player_Number_009": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/009_eliminated.mp3",
+            "Player_Number_010": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/010_eliminated.mp3",
+            "Player_Number_456": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/456_eliminated.mp3",
+
         })
         
         # 🔵 블루투스 자동 연결
@@ -50,7 +47,7 @@ class MainApp:
         cv2.waitKey(1)  # 창이 뜨도록 대기
 
         # 데이터 수집 관련 설정
-        self.qr_capture_duration = 5  # QR 코드 인식 지속 시간 (초)
+        self.qr_capture_duration = 10  # QR 코드 인식 지속 시간 (초)
         self.start_time = None
 
     def run(self):
@@ -68,12 +65,13 @@ class MainApp:
 
                 # ⏳ **2초 대기 후 해당 음성 파일 재생**
                 time.sleep(2)
-                # selected_command = self.value_generator.generate()
-                # self.audio_player.play_audio(f"/home/pi/Desktop/jener/winter_project/game_sounds/{selected_command}.mp3")
+                selected_command = self.value_generator.generate()
+                self.audio_player.play_audio(f"/home/pi/Desktop/jener/winter_project/game_sounds/{selected_command}.mp3")
 
                 # 🔊 **게임 시작 알림 + 배경 음악**
-                # self.audio_player.play_audio("/home/pi/Desktop/jener/winter_project/game_sounds/game_start.mp3")
-                # self.audio_player.play_audio("/home/pi/Desktop/jener/winter_project/game_sounds/background_music.mp3")
+                self.audio_player.play_audio("/home/pi/Desktop/jener/winter_project/game_sounds/game_start.mp3")
+                time.sleep(2)
+                self.audio_player.play_audio("/home/pi/Desktop/jener/winter_project/game_sounds/Way_Back_then.mp3")
 
                 # 🎥 **QR 코드 인식 시작 (20초)**
                 self.data_manager.clear_data()
@@ -96,11 +94,11 @@ class MainApp:
                 qr_data_list = self.data_manager.qr_data_list
                 if qr_data_list:
                     selected_qr = self.data_manager.get_random_data()
-                    print(f"📢 Randomly selected player: {selected_qr}")
+                    # print(f"📢 Randomly selected player: {selected_qr}")
                     self.audio_player.play_audio(selected_qr)
 
             if key == 27:  # ✅ **ESC 입력 시 종료**
-                print("❌ ESC pressed. Exiting program.")
+                # print("❌ ESC pressed. Exiting program.")
                 break  # 🔄 **while 루프 종료**
 
         self.scanner.release()  # 카메라 종료
