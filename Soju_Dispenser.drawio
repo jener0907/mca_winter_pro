@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0" version="26.0.10">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="864" dy="473" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1783" dy="976" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -130,19 +130,25 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="0-RAE0MzKVftKx7bNqM6-51" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;Raspberry pi 버튼 입력&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="570" y="200" width="120" height="40" as="geometry" />
+          <mxGeometry x="580" y="300" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="0-RAE0MzKVftKx7bNqM6-52" value="&lt;font&gt;음료 한잔 토출&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="570" y="410" width="120" height="40" as="geometry" />
+          <mxGeometry x="580" y="510" width="120" height="40" as="geometry" />
         </mxCell>
         <mxCell id="0-RAE0MzKVftKx7bNqM6-55" value="단일 작동모드" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="580" y="170" width="100" height="30" as="geometry" />
+          <mxGeometry x="590" y="270" width="100" height="30" as="geometry" />
         </mxCell>
         <mxCell id="0-RAE0MzKVftKx7bNqM6-56" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.151;entryY=0.039;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="0-RAE0MzKVftKx7bNqM6-17" target="0-RAE0MzKVftKx7bNqM6-40">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="0-RAE0MzKVftKx7bNqM6-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.849;entryY=0.012;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="0-RAE0MzKVftKx7bNqM6-44" target="0-RAE0MzKVftKx7bNqM6-40">
           <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0-RAE0MzKVftKx7bNqM6-58" value="ESP-32&lt;div&gt;디스펜서&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="580" y="80" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="0-RAE0MzKVftKx7bNqM6-59" value="&lt;font&gt;Raspberry pi&lt;/font&gt;&lt;div&gt;&lt;font&gt;본체&lt;/font&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="580" y="130" width="120" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
