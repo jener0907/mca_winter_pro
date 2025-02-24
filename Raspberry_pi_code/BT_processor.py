@@ -54,30 +54,3 @@ class SignalProcessor:
         command = self.value_generator.generate()
         self.bluetooth_handler.send_command(command)
         print(f"Sent to ESP-32: {command}")
-
-
-
-# # --- main.py에서 사용할 코드 ---
-# if __name__ == "__main__":
-#     # 블루투스 핸들러 초기화
-#     bluetooth_handler = BluetoothHandler()
-#     bluetooth_handler.connect()
-
-#     # 랜덤 값 생성기 초기화 (기본 확률 사용)
-#     value_generator = RandomValueGenerator()
-
-#     # 신호 프로세서 초기화
-#     signal_processor = SignalProcessor(bluetooth_handler, value_generator)
-
-#     try:
-#         print("Waiting for signals. Press Ctrl+C to stop.")
-#         while True:
-#             # 시뮬레이션: 신호 감지 (여기서는 5초마다 신호가 발생한다고 가정)
-#             time.sleep(5)
-#             signal_processor.process_signal()
-
-#     except KeyboardInterrupt:
-#         print("Program stopped by user.")
-
-#     finally:
-#         bluetooth_handler.close()

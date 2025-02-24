@@ -25,23 +25,6 @@ class MainApp:
             "Player_Number_002": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/002_eliminated.mp3",
             "Player_Number_003": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/003_eliminated.mp3",
             "Player_Number_004": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/004_eliminated.mp3",
-            "Player_Number_005": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/005_eliminated.mp3",
-            "Player_Number_006": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/006_eliminated.mp3",
-            "Player_Number_007": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/007_eliminated.mp3",
-            "Player_Number_008": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/008_eliminated.mp3",
-            "Player_Number_009": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/009_eliminated.mp3",
-            "Player_Number_010": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/010_eliminated.mp3",
-            "Player_Number_456": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/456_eliminated.mp3",
-            
-            # 게임 사운드 추가
-            "Way_Back_then": "/home/pi/Desktop/jener/winter_project/game_sounds/Way_Back_then.mp3",
-            "game_start": "/home/pi/Desktop/jener/winter_project/game_sounds/game_start.mp3",
-    
-            # `selected_command` 관련 추가
-            "A": "/home/pi/Desktop/jener/winter_project/game_sounds/A.mp3",
-            "B": "/home/pi/Desktop/jener/winter_project/game_sounds/B.mp3",
-            "C": "/home/pi/Desktop/jener/winter_project/game_sounds/C.mp3",
-        
         })
         
         # 🔵 블루투스 자동 연결
@@ -57,42 +40,32 @@ class MainApp:
         cv2.waitKey(1)  # 창이 뜨도록 대기
 
         # 데이터 수집 관련 설정
-        self.qr_capture_duration = 20  # QR 코드 인식 지속 시간 (초)
+        self.qr_capture_duration = 5  # QR 코드 인식 지속 시간 (초)
         self.start_time = None
 
     def run(self):
         """메인 루프 실행"""
-        # print("Press Spacebar to start the sequence. Press ESC to exit.")
+        print("Press Spacebar to start the sequence. Press ESC to exit.")
         
-        while True:  #  **무한 루프 (게임 시퀀스 실행)**
+        while True:  # 🔄 **무한 루프 (게임 시퀀스 실행)**
             key = cv2.waitKey(1) & 0xFF  # 키 입력 대기
 
-            if key == ord(' '):  # **스페이스바 입력 시 게임 시작**
-                # print("Spacebar pressed! Starting sequence...")
+            if key == ord(' '):  # ✅ **스페이스바 입력 시 게임 시작**
+                print(" Spacebar pressed! Starting sequence...")
 
                 # 🎲 **랜덤 값 생성 및 ESP-32로 전송**
                 self.signal_processor.process_signal()
 
                 # ⏳ **2초 대기 후 해당 음성 파일 재생**
                 time.sleep(2)
-                selected_command = self.value_generator.generate().strip().upper()  # 공백 제거 및 대문자 변환
+                # selected_command = self.value_generator.generate()
+                # self.audio_player.play_audio(f"/home/pi/Desktop/jener/winter_project/game_sounds/{selected_command}.mp3")
 
-                # print(f" Selected command: {selected_command}")  
-                # print(f" Registered audio files keys: {list(self.audio_player.audio_files.keys())}")
+                # 🔊 **게임 시작 알림 + 배경 음악**
+                # self.audio_player.play_audio("/home/pi/Desktop/jener/winter_project/game_sounds/game_start.mp3")
+                # self.audio_player.play_audio("/home/pi/Desktop/jener/winter_project/game_sounds/background_music.mp3")
 
-                # 🔊 **명령어 효과음 재생**
-                if selected_command in self.audio_player.audio_files:
-                    self.audio_player.play_audio(selected_command)
-                else:
-                    print(f"⚠️ Warning: No audio file mapped for command '{selected_command}'")
-
-                # 🔊 **게임 시작 알림 + 배경 음악 실행**
-                time.sleep(5)
-                self.audio_player.play_audio("game_start")
-                time.sleep(5)
-                self.audio_player.play_background_music("Way_Back_then")  # ✅ **배경음악 비동기 실행**
-
-                # 🎥 **QR 코드 인식 시작 (10초)**
+                # 🎥 **QR 코드 인식 시작 (20초)**
                 self.data_manager.clear_data()
                 self.start_time = time.time()
 
@@ -109,19 +82,16 @@ class MainApp:
                     self.scanner.display_frame(frame, decoded_objects)
                     cv2.waitKey(1)  # 화면 업데이트
 
-                # 🎯 **QR 코드 랜덤 선택 & 음성 재생**
+                # 🎯 **랜덤으로 QR 코드 선택 & 음성 재생**
                 qr_data_list = self.data_manager.qr_data_list
                 if qr_data_list:
                     selected_qr = self.data_manager.get_random_data()
+                    print(f"📢 Randomly selected player: {selected_qr}")
                     self.audio_player.play_audio(selected_qr)
 
-                # 🛑 **QR 인식 종료 시 배경음악 종료**
-                self.audio_player.stop_background_music()
-                # print("🎵 QR 코드 인식 종료 및 음악 종료 완료.")
-
-            if key == 27:  # **ESC 입력 시 종료**
-                # print("❌ ESC pressed. Exiting program.")
-                break  # **while 루프 종료**
+            if key == 27:  # ✅ **ESC 입력 시 종료**
+                print("❌ ESC pressed. Exiting program.")
+                break  # 🔄 **while 루프 종료**
 
         self.scanner.release()  # 카메라 종료
         self.bluetooth_handler.close()  # 블루투스 종료
@@ -131,7 +101,6 @@ class MainApp:
 if __name__ == "__main__":
     app = MainApp()  # 🎮 MainApp 인스턴스 생성
     app.run()  # 🏁 프로그램 실행
-
 
 
 
