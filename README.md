@@ -1,3 +1,12 @@
+pi@raspberrypi:~/Desktop/jener/winter_project $ git push origin main 
+To https://github.com/jener0907/mca_winter_pro
+ ! [rejected]        main -> main (non-fast-forward)
+error: 레퍼런스를 'https://github.com/jener0907/mca_winter_pro'에 푸시하는데 실패했습니다
+힌트: 현재 브랜치의 끝이 리모트 브랜치보다 뒤에 있으므로 업데이트가
+힌트: 거부되었습니다. 푸시하기 전에 ('git pull ...' 등 명령으로) 리모트
+힌트: 변경 사항을 포함하십시오.
+힌트: 자세한 정보는 'git p
+
 # 2/1 patch
 bluetooth auto connect
 
