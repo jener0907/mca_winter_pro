@@ -4,203 +4,37 @@
 # https://github.com/jener0907/mca_winter_pro
 # https://github.com/jener0907/mca_winter_pro/tree/main/Raspberry%20pi_code
 
-
+# main.py
 import time
-import cv2
-import numpy as np
-from qr_scanner import QRScanner
-from qr_data_manager import QRDataManager
-from audio_player import AudioPlayer
-from BT_processor import BluetoothHandler, RandomValueGenerator, SignalProcessor
+import sys
+from status_manager import StatusManager
 
-class MainApp:
-    """QR 코드 스캔, 데이터 처리, 오디오 재생, 블루투스 통신을 통합 관리"""
-
-    def __init__(self):
-        """필요한 클래스 초기화"""
-        self.scanner = QRScanner()
-        self.data_manager = QRDataManager()
-        self.audio_player = AudioPlayer({
-            "Player_Number_001": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/001_eliminated.mp3",
-            "Player_Number_002": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/002_eliminated.mp3",
-            "Player_Number_003": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/003_eliminated.mp3",
-            "Player_Number_004": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/004_eliminated.mp3",
-            "Player_Number_005": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/005_eliminated.mp3",
-            "Player_Number_006": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/006_eliminated.mp3",
-            "Player_Number_007": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/007_eliminated.mp3",
-            "Player_Number_008": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/008_eliminated.mp3",
-            "Player_Number_009": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/009_eliminated.mp3",
-            "Player_Number_010": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/010_eliminated.mp3",
-            "Player_Number_456": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/456_eliminated.mp3",
-            
-            # 게임 사운드 추가
-            "Way_Back_then": "/home/pi/Desktop/jener/winter_project/game_sounds/Way_Back_then.mp3",
-            "game_start": "/home/pi/Desktop/jener/winter_project/game_sounds/game_start.mp3",
-    
-            # `selected_command` 관련 추가
-            "A": "/home/pi/Desktop/jener/winter_project/game_sounds/A.mp3",
-            "B": "/home/pi/Desktop/jener/winter_project/game_sounds/B.mp3",
-            "C": "/home/pi/Desktop/jener/winter_project/game_sounds/C.mp3",
-        
-        })
-        
-        # 🔵 블루투스 자동 연결
-        self.bluetooth_handler = BluetoothHandler()
-        self.bluetooth_handler.connect()
-        self.value_generator = RandomValueGenerator()
-        self.signal_processor = SignalProcessor(self.bluetooth_handler, self.value_generator)
-
-        # 🔳 OpenCV 창 강제 오픈
-        cv2.namedWindow("QR Code Scanner", cv2.WINDOW_NORMAL)
-        cv2.setWindowProperty("QR Code Scanner", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.imshow("QR Code Scanner", 255 * np.ones((480, 640, 3), dtype=np.uint8))
-        cv2.waitKey(1)  # 창이 뜨도록 대기
-
-        # 데이터 수집 관련 설정
-        self.qr_capture_duration = 20  # QR 코드 인식 지속 시간 (초)
-        self.start_time = None
-
-    def run(self):
-        """메인 루프 실행"""
-        # print("Press Spacebar to start the sequence. Press ESC to exit.")
-        
-        while True:  #  **무한 루프 (게임 시퀀스 실행)**
-            key = cv2.waitKey(1) & 0xFF  # 키 입력 대기
-
-            if key == ord(' '):  # **스페이스바 입력 시 게임 시작**
-                # print("Spacebar pressed! Starting sequence...")
-
-                # 🎲 **랜덤 값 생성 및 ESP-32로 전송**
-                self.signal_processor.process_signal()
-
-                # ⏳ **2초 대기 후 해당 음성 파일 재생**
-                time.sleep(2)
-                selected_command = self.value_generator.generate().strip().upper()  # 공백 제거 및 대문자 변환
-
-                # print(f" Selected command: {selected_command}")  
-                # print(f" Registered audio files keys: {list(self.audio_player.audio_files.keys())}")
-
-                # 🔊 **명령어 효과음 재생**
-                if selected_command in self.audio_player.audio_files:
-                    self.audio_player.play_audio(selected_command)
-                else:
-                    print(f"⚠️ Warning: No audio file mapped for command '{selected_command}'")
-
-                # 🔊 **게임 시작 알림 + 배경 음악 실행**
-                time.sleep(5)
-                self.audio_player.play_audio("game_start")
-                time.sleep(5)
-                self.audio_player.play_background_music("Way_Back_then")  # ✅ **배경음악 비동기 실행**
-
-                # 🎥 **QR 코드 인식 시작 (10초)**
-                self.data_manager.clear_data()
-                self.start_time = time.time()
-
-                while time.time() - self.start_time < self.qr_capture_duration:
-                    frame = self.scanner.get_frame()
-                    if frame is None:
-                        break
-
-                    decoded_objects = self.scanner.decode_qr(frame)
-                    for obj in decoded_objects:
-                        qr_data = obj.data.decode('utf-8')
-                        self.data_manager.add_data(qr_data)
-
-                    self.scanner.display_frame(frame, decoded_objects)
-                    cv2.waitKey(1)  # 화면 업데이트
-
-                # 🎯 **QR 코드 랜덤 선택 & 음성 재생**
-                qr_data_list = self.data_manager.qr_data_list
-                if qr_data_list:
-                    selected_qr = self.data_manager.get_random_data()
-                    self.audio_player.play_audio(selected_qr)
-
-                # 🛑 **QR 인식 종료 시 배경음악 종료**
-                self.audio_player.stop_background_music()
-                # print("🎵 QR 코드 인식 종료 및 음악 종료 완료.")
-
-            if key == 27:  # **ESC 입력 시 종료**
-                # print("❌ ESC pressed. Exiting program.")
-                break  # **while 루프 종료**
-
-        self.scanner.release()  # 카메라 종료
-        self.bluetooth_handler.close()  # 블루투스 종료
-        cv2.destroyAllWindows()  # 모든 OpenCV 창 닫기
-
-# ✅ **실행 코드**
 if __name__ == "__main__":
-    app = MainApp()  # 🎮 MainApp 인스턴스 생성
-    app.run()  # 🏁 프로그램 실행
-
-
-
-
-
-
-
-# import time
-# import cv2
-# from qr_scanner import QRScanner
-# from qr_data_manager import QRDataManager
-# from audio_player import AudioPlayer
-
-# class MainApp:
-#     """QR 코드 스캔, 데이터 처리, 오디오 재생을 통합 관리"""
-
-#     def __init__(self):
-#         """필요한 클래스 초기화"""
-#         self.scanner = QRScanner()
-#         self.data_manager = QRDataManager()
-#         self.audio_player = AudioPlayer({
-#             "Player_Number_001": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/001_eliminated.mp3",
-#             "Player_Number_002": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/002_eliminated.mp3",
-#             "Player_Number_003": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/003_eliminated.mp3",
-#             "Player_Number_004": "/home/pi/Desktop/jener/winter_project/Player_eliminated_sound/004_eliminated.mp3",
-#         })
-#         self.capture_duration = 3  # 데이터 수집 시간 (초)
-#         self.start_time = None
-
-#     def run(self):
-#         """메인 루프 실행"""
-#         while True:
-#             frame = self.scanner.get_frame()
-#             if frame is None:
-#                 break
-
-#             decoded_objects = self.scanner.decode_qr(frame)
-#             for obj in decoded_objects:
-#                 qr_data = obj.data.decode('utf-8')
-#                 self.data_manager.add_data(qr_data)
-
-#             self.scanner.display_frame(frame, decoded_objects)
-
-#             key = cv2.waitKey(1) & 0xFF
-
-#             if key == ord(' '):  # 스페이스바로 데이터 수집 시작
-#                 # print("Data collection started.")
-#                 self.data_manager.clear_data()
-#                 self.start_time = time.time()
-
-#             if self.start_time is not None:
-#                 elapsed_time = time.time() - self.start_time
-#                 if elapsed_time >= self.capture_duration:
-#                     # print("Data collection ended.")
-#                     qr_data_list = self.data_manager.qr_data_list
-#                     # print(f"Collected QR Data: {qr_data_list}")
-
-#                     selected_data = self.data_manager.get_random_data()
-#                     if selected_data:
-#                         # print(f"Randomly selected data: {selected_data}")
-#                         self.audio_player.play_audio(selected_data)
-
-#                     self.start_time = None
-
-#             if key == 27:  # ESC 키로 종료
-#                 break
-
-#         self.scanner.release()
-
-
-# if __name__ == "__main__":
-#     app = MainApp()
-#     app.run()
+    try:
+        # 명령줄 인자로 개발 모드 여부 결정 (기본: 운영 모드)
+        show_display = "--dev" in sys.argv
+        
+        if show_display:
+            print("🔧 개발 모드로 실행합니다. (디스플레이 활성화)")
+        else:
+            print("🚀 운영 모드로 실행합니다. (디스플레이 비활성화)")
+        
+        # StatusManager 인스턴스 생성 및 실행
+        manager = StatusManager(show_display=show_display)
+        
+        # 시스템 준비 완료 메시지
+        print("✅ MCA 소주 디스펜서 시스템이 준비되었습니다.")
+        print("🎮 버튼을 눌러 게임을 시작하세요.")
+        
+        # 메인 루프 실행
+        manager.run()
+        
+    except Exception as e:
+        print(f"🚨 오류 발생: {e}")
+        
+        # 심각한 오류 발생 시 재시작 (선택 사항)
+        print("⚠️ 시스템을 재시작합니다...")
+        time.sleep(3)
+        
+        # 프로세스 종료 (systemd 등으로 관리 중이라면 자동 재시작됨)
+        sys.exit(1)
