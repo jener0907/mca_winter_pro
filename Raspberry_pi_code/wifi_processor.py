@@ -1,72 +1,3 @@
-import subprocess
-import time
-
-SSID = "SOJU_Dispenser"
-PASSWORD = "12345678"
-
-# def rescan_wifi():
-#     while True:
-#         print("Wi-Fi 스캔 실행 중...")
-#         subprocess.run(["nmcli", "dev", "wifi", "rescan"], capture_output=True, text=True)
-#         time.sleep(10)  # 10초마다 스캔 (필요시 조정)
-
-# rescan_wifi()
-
-def is_wifi_available():
-    """SOJU_Dispenser가 Wi-Fi 목록에 있는지 확인"""
-    result = subprocess.run(["nmcli", "-t", "-f", "ssid", "dev", "wifi"], capture_output=True, text=True)
-    networks = result.stdout.strip().split("\n")
-    return SSID in networks
-
-def get_current_wifi():
-    """현재 연결된 Wi-Fi SSID 확인"""
-    result = subprocess.run(["nmcli", "-t", "-f", "active,ssid", "connection", "show", "--active"],
-                            capture_output=True, text=True)
-    active_connections = result.stdout.strip().split("\n")
-
-    for conn in active_connections:
-        if conn.startswith("yes:"):
-            ssid = conn.split(":")[1]
-            return ssid
-    return None  # 연결된 Wi-Fi 없음
-
-def is_ip_assigned():
-    """Wi-Fi 연결 후 실제로 IP를 받았는지 확인"""
-    result = subprocess.run(["hostname", "-I"], capture_output=True, text=True)
-    return "192.168.4." in result.stdout  # ESP32 AP의 IP 대역인지 확인
-
-def connect_to_wifi():
-    """SOJU_Dispenser에 연결 시도"""
-    if not is_wifi_available():
-        print("SOJU_Dispenser가 감지되지 않음. Wi-Fi 검색을 다시 시도하세요.")
-        return False
-
-    print("Wi-Fi 연결 시도 중...")
-
-    # 기존 연결이 끊겨 있으면 재설정 불필요
-    subprocess.run(["sudo", "nmcli", "connection", "delete", SSID], capture_output=True, text=True)
-
-    connect_result = subprocess.run(
-        ["sudo", "nmcli", "dev", "wifi", "connect", SSID, "password", PASSWORD],
-        capture_output=True, text=True, timeout=10
-    )
-
-    if connect_result.returncode == 0 and is_ip_assigned():
-        print("Wi-Fi 연결 완료.")
-        return True
-    else:
-        print("Wi-Fi 연결 실패.")
-        return False
-
-# 현재 Wi-Fi 상태 확인 후 연결 시도
-current_wifi = get_current_wifi()
-
-if current_wifi == SSID:
-    print("이미 SOJU_Dispenser에 연결됨.")
-elif connect_to_wifi():
-    print("SOJU_Dispenser에 연결 성공.")
-else:
-    print("SOJU_Dispenser 연결 실패. 다시 시도하세요.")
 import requests
 import time
 import threading
@@ -186,5 +117,3 @@ if __name__ == "__main__":
     
     except KeyboardInterrupt:
         print("\n프로그램 종료...")
-
-sudo nano /etc/default/crda
